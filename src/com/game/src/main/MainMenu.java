@@ -15,6 +15,8 @@ public class MainMenu extends MouseAdapter {
     private String backgroundPath = "resources/menuBackground.png";
     private String lostPath = "resources/bgHARD.png";
     private String wonPath = "resources/menuBackground.png";
+    private int x = MyGame.GAME_WIDTH, y = MyGame.GAME_HEIGHT,
+            scale = MyGame.SCALE, initialY = 70, offset = 50;
     private MyGame game;
     private Controller controller;
     private Assets assets;
@@ -33,8 +35,8 @@ public class MainMenu extends MouseAdapter {
         this.assets = assets;
         this.chicken = chicken;
     }
-    private int x = MyGame.GAME_WIDTH, y = MyGame.GAME_HEIGHT,
-            scale = MyGame.SCALE, initialY = 70, offset = 50;
+
+    
     public void render(Graphics graphics, String screen){
         graphics.drawImage(menuBackground, 0, 0, x * scale, y * scale, null);
 
