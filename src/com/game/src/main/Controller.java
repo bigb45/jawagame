@@ -44,11 +44,11 @@ public class Controller {
 
         objects.add(o);
         objCount++;
-        System.out.println("added object " + o.getType() + "#" + objCount);
+//         System.out.println("added object " + o.getType() + "#" + objCount);
     }
     public boolean removeObj(GameObject o){
         objCount--;
-        System.out.println("removed object " + o.getType() + "#" + objCount);
+//         System.out.println("removed object " + o.getType() + "#" + objCount);
         return objects.remove(o);
     }
     public int getCount(ID type){
