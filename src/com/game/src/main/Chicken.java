@@ -81,21 +81,32 @@ public class Chicken extends GameObject {
         this.moving = moving;
     }
 
-    public void collides(){
-        for(int i = 0; i < controller.objects.size(); i++){
-            GameObject temp = controller.objects.get(i);
-            if(temp != null &&temp.getType() == ID.Cat){
-                if(getBorders().intersects(temp.getBorders())){
-                    controller.removeObj(temp);
+    public void setHeartCount(int heartCount) {
+        this.heartCount = heartCount;
+        health.setHealth(heartCount);
+    }
 
+    public void collides() {
+        for (int i = 0; i < controller.objects.size(); i++) {
+            try {
+                GameObject temp = controller.objects.get(i);
+
+                if (temp != null && temp.getType() == ID.Cat) {
+                    if (getBorders().intersects(temp.getBorders())) {
+                        controller.removeObj(temp);
+                        MyGame.KILL_COUNT++;
                         health.setHealth(--heartCount);
-                        if(heartCount == 0)
-                            System.exit(0); // replace with game end screen
+                        System.out.println("heart count: " + heartCount);
+                        if (heartCount <= 0)
+                            game.state = MyGame.GAME_STATE.levelLost; // replace with game end screen
 
                     }
                 }
+
+            } catch (NullPointerException e) {
             }
         }
+    }
     public void runAnim(){
         this.velX = 3;
         this.direction = true;

@@ -15,9 +15,11 @@ public class MyGame extends Canvas implements Runnable {
     public static final int GAME_WIDTH = 350;
     public static final int GAME_HEIGHT = GAME_WIDTH/12 * 9 - 10;
     public static final int SCALE = 2;
-    public static final  String TITLE = "Project";
+    public static final  String TITLE = "COD: CW";
     public static int KILL_COUNT = 0;
-    public static int ENEMY_COUNT = 10;
+    public int ENEMY_COUNT = 1;
+
+
     private boolean gameRunning = false;
     private Thread thread;
     private BufferedImage img = new BufferedImage(GAME_WIDTH, GAME_HEIGHT,
@@ -31,14 +33,20 @@ public class MyGame extends Canvas implements Runnable {
     private String backgroundPath = "resources/bgEZ.png";
     private String menuBackgroundPath = "resources/menuBackground.png";
     private MainMenu menu;
-
+    private boolean paused = false;
+    public int level = 1;
     public  enum GAME_STATE{
+
+        level1,
+        level2,
+        level3,
+        paused,
         Menu,
-        Game,
-        winState,
-        paused
+        levelWon,
+        levelLost
     }
     public GAME_STATE state = GAME_STATE.Menu;  // Game state
+    public GAME_STATE prevState = null;
     public void init(){
         requestFocus();
         BImgLoader loader = new BImgLoader();
@@ -53,15 +61,25 @@ public class MyGame extends Canvas implements Runnable {
         assets = new Assets(this);
         controller = new Controller(this, assets);
         animController = new Controller(this, assets);
-
-        controller.addEnemy(MyGame.ENEMY_COUNT);
-        chicken = new Chicken(150, 20, assets, ID.Chicken, controller, this);
-        //player
         menu = new MainMenu(this, animController, assets, chicken);
         this.addMouseListener(menu);
+
+        chicken = new Chicken(150, 20, assets, ID.Chicken, controller, this);
+
     }
+    public void init_game(int eCount){
+        controller.addEnemy(eCount);
+    }
+    public void reset(){
+        for(int i = 0; i < controller.objects.size(); i++)
 
+            controller.removeObj(controller.objects.get(i));
+        ENEMY_COUNT = 10;
+        EGG_LIMIT = 6;
+        KILL_COUNT = 0;
+        chicken.setHeartCount(6);
 
+    }
     private synchronized void start(){
         if(gameRunning)
             return;
@@ -102,7 +120,7 @@ public class MyGame extends Canvas implements Runnable {
             frameCount++;
             if(System.currentTimeMillis() - millis > 1000){
                 millis += 1000;
-                //System.out.println(updates + " ticks, " + frameCount); // FPS counter
+//                System.out.println(updates + " ticks, " + frameCount); // FPS counter
                 frameCount = 0;
                 updates = 0;
             }
@@ -110,21 +128,23 @@ public class MyGame extends Canvas implements Runnable {
         stop();
     }
     private void tick(){
-
-        if(state == GAME_STATE.Game){
-            chicken.tick();
-            controller.tick();
-        }else if(state == GAME_STATE.Menu){
-            menu.tick();
-             animController.runAnim();
-             chicken.runAnim();
-        }else if(state == GAME_STATE.paused){
-            menu.tick();
+        if(!paused) {
+            if (state == GAME_STATE.level1 || state == GAME_STATE.level2 || state == GAME_STATE.level3) {
+                chicken.tick();
+                controller.tick();
+            } else if (state == GAME_STATE.Menu) {
+                animController.runAnim();
+                chicken.runAnim();
+            }
+            if (KILL_COUNT == ENEMY_COUNT - 3) {
+                state = GAME_STATE.levelWon;
+            }
+            if(state == GAME_STATE.levelWon || state == GAME_STATE.levelLost)
+                reset();
         }
-        if(KILL_COUNT == ENEMY_COUNT){
-            state = GAME_STATE.winState;
-        }
-
+    }
+    public void setState(GAME_STATE newState){
+        state = newState;
     }
     private void render(){
         BufferStrategy bStrat = this.getBufferStrategy();
@@ -136,19 +156,25 @@ public class MyGame extends Canvas implements Runnable {
          Graphics graphics = bStrat.getDrawGraphics();
         graphics.drawImage(img, 0, 0, getWidth(), getHeight(), this);
         graphics.drawImage(background, 0,0, null);
-        if(state == GAME_STATE.Game){
+        if(!paused) {
+            if (state == GAME_STATE.level1 || state == GAME_STATE.level2 || state == GAME_STATE.level3){
+                chicken.render(graphics);
+                controller.render(graphics);
+                graphics.setColor(Color.black);
+                graphics.setFont(new Font("Default", Font.BOLD, 14));
+                graphics.drawString("Your score: " + (KILL_COUNT * 10), 10, 60);
 
-            chicken.render(graphics);
-            controller.render(graphics);
-            graphics.setColor(Color.black);
-            graphics.setFont(new Font("Default", Font.BOLD, 14));
-            graphics.drawString("Your score: " + (KILL_COUNT * 10), 10, 60);
-
-        }else if(state == GAME_STATE.Menu){
-            menu.render(graphics);
-            chicken.render(graphics);
-            animController.render(graphics);
-        }
+            } else if (state == GAME_STATE.Menu) {
+                menu.render(graphics, "menu");
+                chicken.render(graphics);
+                animController.render(graphics);
+            } else if (state == GAME_STATE.levelLost) {
+                menu.render(graphics, "end");
+            } else if (state == GAME_STATE.levelWon) {
+                menu.render(graphics, "won");
+            }
+        }else
+            menu.render(graphics, "paused");
         graphics.dispose();
         bStrat.show();
     }
@@ -168,6 +194,10 @@ public class MyGame extends Canvas implements Runnable {
         if(key == KeyEvent.VK_SPACE){
             if(controller.getCount(ID.Egg) < EGG_LIMIT )
                 controller.addObj(new Egg(chicken.getX()+38, chicken.getY()+70, assets, ID.Egg, controller));
+        }
+        if(key == KeyEvent.VK_ESCAPE && state != GAME_STATE.Menu && state != GAME_STATE.levelLost && state != GAME_STATE.levelWon ){
+            prevState = state;
+           paused = !paused;
         }
 
     }

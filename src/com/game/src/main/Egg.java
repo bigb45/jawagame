@@ -49,15 +49,17 @@ public class Egg extends GameObject {
     }
     public void collides() {
         for(int i = 0; i < controller.objects.size(); i++){
-            GameObject temp  = controller.objects.get(i);
-            if (temp.getType() == ID.Cat) {
-                if (getBorders().intersects(temp.getBorders())) {
-                    setImg(assets.eggCracked);
-                    timer.schedule(new TimerTask() {
-                        public void run() {
-                            controller.removeObj(Egg.this);
-                        }
-                    }, 70);
+            if(controller.objects.get(i) != null) {
+                GameObject temp = controller.objects.get(i);
+                if (temp.getType() == ID.Cat) {
+                    if (getBorders().intersects(temp.getBorders())) {
+                        setImg(assets.eggCracked);
+                        timer.schedule(new TimerTask() {
+                            public void run() {
+                                controller.removeObj(Egg.this);
+                            }
+                        }, 70);
+                    }
                 }
             }
         }

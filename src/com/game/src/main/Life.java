@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class Life extends GameObject{
     private Assets assets;
-    private int remainingHealth;
+    public int remainingHealth;
 
     public Life(double x, double y, MyGame game, int remainingHealth) {
         super(x, y, ID.Life);

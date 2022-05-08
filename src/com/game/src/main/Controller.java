@@ -11,59 +11,52 @@ public class Controller {
     MyGame game;
     Assets assets;
     GameObject obj;
-    //private Random rand;
+    private int objCount = 0;
     public Controller(MyGame game, Assets assets) {
-
         this.game = game;
         this.assets = assets;
-//        rand = new Random();
-
-//        for(int i = 0; i < 768; i += 128){
-//            addObj(new Cat(i, 470, assets, ID.Cat, this));
-//        } for(int i = 0; i < 576; i += 64){
-//            addObj(new Cat(i, 560, assets, ID.Cat, this));
-//        }
 
     }
 
     public void tick(){
         for (int i = 0; i < objects.size(); i++) {
-            GameObject object = objects.get(i);
-            obj = object;
-            obj.tick();
+           try {
+               objects.get(i).tick();
+           }catch(NullPointerException e){
+                System.out.println("null exception in controller");
+                continue;
+           }
         }
-        int size = getCount(ID.Cat);
-        MyGame.KILL_COUNT = MyGame.ENEMY_COUNT - size;
     }
     public void render(Graphics graphics){
+        if(objects != null && objects.size() > 0) {
+            for (int i = 0; i < objects.size(); i++) {
+                try {
+                    obj = objects.get(i);
+                    obj.render(graphics);
+                }catch (NullPointerException e){
 
-        for (int i = 0; i < objects.size(); i++) {
-            obj = objects.get(i);
-            if (obj != null)
-                obj.render(graphics);
+                }
+            }
         }
-
-
     }
     public void addObj(GameObject o){
-        objects.add(o);
-//        System.out.println("added object " + o.getType());
-    }
-    public void removeObj(GameObject o){
-        objects.remove(o);
-//        System.out.println("removed object " + o.getType());
-        if(o.getType() == ID.Cat){
-            MyGame.KILL_COUNT++;
-            // System.out.println("body count is " + MyGame.KILL_COUNT);
-        }
 
+        objects.add(o);
+        objCount++;
+        System.out.println("added object " + o.getType() + "#" + objCount);
+    }
+    public boolean removeObj(GameObject o){
+        objCount--;
+        System.out.println("removed object " + o.getType() + "#" + objCount);
+        return objects.remove(o);
     }
     public int getCount(ID type){
         int count = 0;
 
         for(int i = 0; i < objects.size(); i++){
             GameObject temp = objects.get(i);
-            if(temp.getType() == type){
+            if(temp != null && temp.getType() == type){
                 count++;
             }
         }
@@ -82,11 +75,9 @@ public class Controller {
     public void runAnim(){
         addObj(new Cat(400, 300, assets, ID.Cat, this));
         addObj(new Cat(470, 350, assets, ID.Cat, this));
-        for(int i = 0; i < objects.size(); i++){
-            GameObject temp = objects.get(i);
-
-
-        }
+//        for(int i = 0; i < objects.size(); i++){
+//            GameObject temp = objects.get(i);
+//        }
     }
 
 

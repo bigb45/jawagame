@@ -12,8 +12,10 @@ public class Cat extends GameObject{
     private Controller controller;
 
     private Random rand;
+    private int amplitude = 1;
 
     BufferedImage img;
+
     Timer timer;
     private double auxiliary;
     public Cat(double x, double y, Assets assets, ID type, Controller controller) {
@@ -25,6 +27,12 @@ public class Cat extends GameObject{
         timer = new Timer();
         this.rand = new Random();
         this.auxiliary = 0.0;
+        if(controller.game.level == 2) {
+            amplitude = 3;
+        }else if(controller.game.level == 3){
+            amplitude = 5;
+            velY = 2;
+        }
     }
     public void tick(){
         if(y < -40) {
@@ -33,7 +41,11 @@ public class Cat extends GameObject{
         }
         y -= velY;
         collides();
-        //zigzagMVMT();
+//        if(controller.game.level == 2 || controller.game.level == 3) {
+//            zigzagMVMT();
+//        }
+
+
     }
     public void render(Graphics graphics){
         graphics.drawImage(img, (int)x, (int)y, null);
@@ -68,7 +80,7 @@ public class Cat extends GameObject{
                     setImg(assets.eggedCat);
                     timer.schedule(new TimerTask() {
                         public void run() {
-                            controller.removeObj(Cat.this);
+                            r();
                         }
                     }, 100);
 
@@ -76,13 +88,21 @@ public class Cat extends GameObject{
             }
         }
     }
+    private void r(){
+        if(controller.removeObj(this)) {
+
+            MyGame.KILL_COUNT++;
+//            System.out.println("Removed cat");
+        }
+    }
+
     public void zigzagMVMT(){
         if (auxiliary >= Math.PI * 2) {
             auxiliary = 0.0;
         }
 
         if (auxiliary < Math.PI * 2) {
-            int posX = (int) (Math.sin(auxiliary) * 5);// zigzag amplitude
+            int posX = (int) (Math.sin(auxiliary) * amplitude);// zigzag amplitude
             int posY = (int) (Math.asin(auxiliary) * 1);// ?????????????????
             setX(getX() + posX);
             setY(getY() + posY); // controls the speed of enemies
