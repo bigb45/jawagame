@@ -15,8 +15,6 @@ public class MainMenu extends MouseAdapter {
     private String backgroundPath = "resources/menuBackground.png";
     private String lostPath = "resources/bgHARD.png";
     private String wonPath = "resources/menuBackground.png";
-    private int x = MyGame.GAME_WIDTH, y = MyGame.GAME_HEIGHT,
-            scale = MyGame.SCALE, initialY = 70, offset = 50;
     private MyGame game;
     private Controller controller;
     private Assets assets;
@@ -35,8 +33,8 @@ public class MainMenu extends MouseAdapter {
         this.assets = assets;
         this.chicken = chicken;
     }
-
-    
+    private int x = MyGame.GAME_WIDTH, y = MyGame.GAME_HEIGHT,
+            scale = MyGame.SCALE, initialY = 70, offset = 50;
     public void render(Graphics graphics, String screen){
         graphics.drawImage(menuBackground, 0, 0, x * scale, y * scale, null);
 
@@ -103,7 +101,7 @@ public class MainMenu extends MouseAdapter {
                 game.level = 1;
                 MyGame.EGG_LIMIT = 5;
                 game.ENEMY_COUNT = 14;
-                game.init_game(10);
+                game.init_game(14);
                 game.state = GAME_STATE.level1;
             }
             if (hovering(mx, my, 10, 90, 80, 40)) { // lvl 2
@@ -111,7 +109,7 @@ public class MainMenu extends MouseAdapter {
                 game.level = 2;
                 MyGame.EGG_LIMIT = 4;
                 game.ENEMY_COUNT = 18;
-                game.init_game(15);
+                game.init_game(18);
                 game.state = GAME_STATE.level2;
 
             }

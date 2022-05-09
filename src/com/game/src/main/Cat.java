@@ -49,9 +49,9 @@ public class Cat extends GameObject{
     }
     public void render(Graphics graphics){
         graphics.drawImage(img, (int)x, (int)y, null);
-       Graphics2D graphics2D = (Graphics2D) graphics;
-       graphics2D.setColor(Color.green); // hitbox for enemies
-       graphics2D.draw(getBorders());
+//        Graphics2D graphics2D = (Graphics2D) graphics;
+//        graphics2D.setColor(Color.green); // hitbox for enemies
+//        graphics2D.draw(getBorders());
     }
     public Rectangle getBorders(){
         return(new Rectangle((int)x, (int)y, 40, 44));

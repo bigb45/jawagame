@@ -11,7 +11,7 @@ public class Controller {
     MyGame game;
     Assets assets;
     GameObject obj;
-    private int objCount = 0;
+//    private int objCount = 0;
     public Controller(MyGame game, Assets assets) {
         this.game = game;
         this.assets = assets;
@@ -42,26 +42,26 @@ public class Controller {
     }
     public void addObj(GameObject o){
 
-        objects.add(o);
+//       objects.add(o);
         objCount++;
-//         System.out.println("added object " + o.getType() + "#" + objCount);
+//        System.out.println("added object " + o.getType() + "#" + objCount);
     }
     public boolean removeObj(GameObject o){
-        objCount--;
-//         System.out.println("removed object " + o.getType() + "#" + objCount);
+//        objCount--;
+//        System.out.println("removed object " + o.getType() + "#" + objCount);
         return objects.remove(o);
     }
-    public int getCount(ID type){
-        int count = 0;
-
-        for(int i = 0; i < objects.size(); i++){
-            GameObject temp = objects.get(i);
-            if(temp != null && temp.getType() == type){
-                count++;
-            }
-        }
-        return count;
-    }
+//    public int getCount(ID type){
+//        int count = 0;
+//
+//        for(int i = 0; i < objects.size(); i++){
+//            GameObject temp = objects.get(i);
+//            if(temp != null && temp.getType() == type){
+//                count++;
+//            }
+//        }
+//        return count;
+//    }
     public void addEnemy(int count){
         for (int i = 0; i < count; i++){
             addObj(new Cat((getRand(1, 12)) * 48, (getRand(10, 18))* 48, assets, ID.Cat, this));

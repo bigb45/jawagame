@@ -192,7 +192,7 @@ public class MyGame extends Canvas implements Runnable {
             chicken.setDirection(false);
         }
         if(key == KeyEvent.VK_SPACE){
-            if(controller.getCount(ID.Egg) < EGG_LIMIT )
+//            if(controller.getCount(ID.Egg) < EGG_LIMIT )
                 controller.addObj(new Egg(chicken.getX()+38, chicken.getY()+70, assets, ID.Egg, controller));
         }
         if(key == KeyEvent.VK_ESCAPE && state != GAME_STATE.Menu && state != GAME_STATE.levelLost && state != GAME_STATE.levelWon ){
